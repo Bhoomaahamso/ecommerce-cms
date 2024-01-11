@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { MoreHorizontal } from "lucide-react";
+import { Copy, Edit, MoreHorizontal, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { useParams, useRouter } from "next/navigation";
@@ -17,9 +17,11 @@ import { Billboard } from "@prisma/client";
 import AlertModal from "./AlertModal";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { BillboardColumn } from "./BillboardColumn";
 
-const CellAction = ({ data }: { data: Billboard }) => {
+const CellAction = ({ data }: { data: BillboardColumn }) => {
   const router = useRouter();
+  const params = useParams();
 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -32,7 +34,7 @@ const CellAction = ({ data }: { data: Billboard }) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/${data.storeId}/billboards/${data.id}`);
+      await axios.delete(`/api/${params.storeId}/billboards/${data.id}`);
       router.refresh();
       toast.success("Billboard deleted");
     } catch (err) {
@@ -53,23 +55,30 @@ const CellAction = ({ data }: { data: Billboard }) => {
         onConfirm={onDelete}
       />
       <DropdownMenu>
-        <DropdownMenuTrigger>
+        <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="sm">
             <MoreHorizontal className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
+        <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={onCopy}>Copy ID</DropdownMenuItem>
+          <DropdownMenuItem onClick={onCopy}>
+            <Copy className="h-4 w-4 mr-2" />
+            Copy ID
+          </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() =>
-              router.push(`/${data.storeId}/billboards/${data.id}`)
+              router.push(`/${params.storeId}/billboards/${data.id}`)
             }
           >
+            <Edit className="h-4 w-4 mr-2" />
             Update
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={onDelete}>Delete</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setOpen(true)}>
+            <Trash2 className="h-4 w-4 mr-2" />
+            Delete
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
