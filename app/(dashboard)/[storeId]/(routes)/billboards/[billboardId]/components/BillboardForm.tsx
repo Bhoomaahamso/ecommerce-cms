@@ -14,15 +14,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import Heading from "./Heading";
+import Heading from "../../../../../../../components/custom-ui/Heading";
 import { Trash2 } from "lucide-react";
-import { Separator } from "../ui/separator";
+import { Separator } from "../../../../../../../components/ui/separator";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
-import AlertModal from "./AlertModal";
-import ImageUpload from "./ImageUpload";
+import AlertModal from "../../../../../../../components/custom-ui/AlertModal";
+import ImageUpload from "../../../../../../../components/custom-ui/ImageUpload";
 
 const formSchema = z.object({
   label: z.string().min(1),
@@ -111,7 +111,7 @@ const BillboardForm = ({ initialData }: { initialData: Billboard | null }) => {
         )}
       </div>
       <Separator />
-      <div >
+      <div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
