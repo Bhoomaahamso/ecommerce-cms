@@ -1,30 +1,43 @@
-import Client from "@/app/(dashboard)/[storeId]/(routes)/sizes/components/Client";
+import Client from "@/app/(dashboard)/[storeId]/(routes)/orders/components/Client";
 import prismadb from "@/lib/prismadb";
 import { format } from "date-fns";
-import { SizeColumn } from "./components/Column";
+import { OrderColumn } from "./components/Column";
+import { formatter } from "@/lib/utils";
 
 const page = async ({ params }: { params: { storeId: string } }) => {
-  const sizes = await prismadb.size.findMany({
+  const orders = await prismadb.order.findMany({
     where: {
       storeId: params.storeId,
+    },
+    include: {
+      orderItems: {
+        include: {
+          product: true,
+        },
+      },
     },
     orderBy: {
       createdAt: "desc",
     },
   });
 
-  const formattedSizes: SizeColumn[] = sizes.map((item) => {
+  const formattedOrders: OrderColumn[] = orders.map((item) => {
     return {
       id: item.id,
-      name: item.name,
-      value: item.value,
+      phone: item.phone,
+      address: item.address,
+      products: item.orderItems.map((item) => item.product.name).join(', '),
+      totalPrice: formatter.format(item.orderItems.reduce((total, item)=>{
+        return total + Number(item.product.price)
+      },0)),
+      isPaid: item.isPaid,
       createdAt: format(item.createdAt, "MMMM do, yyyy"),
     };
   });
 
   return (
     <div className="m-4 p-4 pt-2">
-      <Client data={formattedSizes} />
+      <Client data={formattedOrders} />
     </div>
   );
 };

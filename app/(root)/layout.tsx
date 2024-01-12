@@ -9,7 +9,7 @@ export default async function RootLayout({
 }) {
   const { userId } = auth();
 
-  if (!userId) redirect("/sigh-up");
+  if (!userId) redirect("/sign-up");
 
   const store = await prismadb.store.findFirst({
     where: {

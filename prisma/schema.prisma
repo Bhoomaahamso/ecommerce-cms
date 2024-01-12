@@ -20,6 +20,7 @@ model Store {
   size      Size[]      @relation("StoreToSize")
   color     Color[]     @relation("StoreToColor")
   products  Product[]   @relation("StoreToProduct")
+  orders    Order[]     @relation("StoreToOrder")
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
 }
@@ -85,6 +86,7 @@ model Product {
   isFeatured  Boolean   @default(false)
   isArchived  Boolean   @default(false)
   images      Image[]
+  orderItems  OrderItem[]
   storeId     String 
   store       Store     @relation("StoreToProduct", fields: [storeId], references: [id]) 
   categoryId  String
@@ -110,5 +112,30 @@ model Image {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([productId])
+}
+
+model Order {
+  id String @id @default(uuid())
+  phone String @default("")
+  address String @default("")
+  isPaid Boolean @default(false)
+  orderItems OrderItem[]
+  storeId String
+  store Store @relation("StoreToOrder", fields: [storeId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([storeId])
+}
+
+model OrderItem {
+  id String @id @default(uuid())
+  orderId String
+  order Order @relation(fields: [orderId], references: [id])
+  productId String
+  product Product @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
   @@index([productId])
 }
