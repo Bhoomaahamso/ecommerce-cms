@@ -7,11 +7,8 @@ export async function GET(
   { params }: { params: { storeId: string; sizeId: string } }
 ) {
   try {
-    const { userId } = auth();
     if (!params.sizeId)
       return new NextResponse("Size ID is required", { status: 400 });
-
-    if (!userId) return new NextResponse("Unauthenticated", { status: 403 });
 
     const size = await prismadb.size.findFirst({
       where: {

@@ -7,9 +7,6 @@ export async function GET(
   { params }: { params: { storeId: string } }
 ) {
   try {
-    const { userId } = auth();
-
-    if (!userId) return new NextResponse("Unauthenticated", { status: 403 });
     if (!params.storeId)
       return new NextResponse("Store ID is required", { status: 400 });
 
@@ -47,8 +44,7 @@ export async function POST(
       },
     });
 
-    if (!store)
-      return new NextResponse("Unauthorized", { status: 405 });
+    if (!store) return new NextResponse("Unauthorized", { status: 405 });
 
     const color = await prismadb.color.create({
       data: {

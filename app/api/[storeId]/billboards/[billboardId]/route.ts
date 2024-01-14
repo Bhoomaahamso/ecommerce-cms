@@ -7,11 +7,8 @@ export async function GET(
   { params }: { params: { storeId: string; billboardId: string } }
 ) {
   try {
-    const { userId } = auth();
     if (!params.billboardId)
       return new NextResponse("Billboard ID is required", { status: 400 });
-
-    if (!userId) return new NextResponse("Unauthenticated", { status: 403 });
 
     const billboard = await prismadb.billboard.findFirst({
       where: {
@@ -82,7 +79,7 @@ export async function DELETE(
     if (!userId) return new NextResponse("Unauthenticated", { status: 401 });
     if (!params.storeId)
       return new NextResponse("Store ID is required", { status: 400 });
-      if (!params.billboardId)
+    if (!params.billboardId)
       return new NextResponse("Billboard ID is required", { status: 400 });
 
     const billboardStore = await prismadb.store.findFirst({

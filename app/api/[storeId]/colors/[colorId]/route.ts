@@ -7,11 +7,8 @@ export async function GET(
   { params }: { params: { storeId: string; colorId: string } }
 ) {
   try {
-    const { userId } = auth();
     if (!params.colorId)
       return new NextResponse("Color ID is required", { status: 400 });
-
-    if (!userId) return new NextResponse("Unauthenticated", { status: 403 });
 
     const color = await prismadb.color.findFirst({
       where: {
@@ -51,8 +48,7 @@ export async function PATCH(
       },
     });
 
-    if (!store)
-      return new NextResponse("Unauthorized", { status: 405 });
+    if (!store) return new NextResponse("Unauthorized", { status: 405 });
 
     const color = await prismadb.color.update({
       where: {
@@ -91,8 +87,7 @@ export async function DELETE(
       },
     });
 
-    if (!store)
-      return new NextResponse("Unauthorized", { status: 405 });
+    if (!store) return new NextResponse("Unauthorized", { status: 405 });
 
     const color = await prismadb.color.delete({
       where: {

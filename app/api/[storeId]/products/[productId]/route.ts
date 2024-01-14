@@ -7,11 +7,8 @@ export async function GET(
   { params }: { params: { storeId: string; productId: string } }
 ) {
   try {
-    const { userId } = auth();
     if (!params.productId)
       return new NextResponse("Product ID is required", { status: 400 });
-
-    if (!userId) return new NextResponse("Unauthenticated", { status: 403 });
 
     const product = await prismadb.product.findFirst({
       where: {
